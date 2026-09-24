@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="search-container">
+    <h2>Search isiZulu &harr; English &harr; Swati &harr; Sotho</h2>
+    <form action="{% url 'search' %}" method="get" class="search-form-container">
+        <div class="search-form">
+            <input type="text" name="q" value="{{ form.q.value|default:'' }}" placeholder="Enter isiZulu, English, Swati or Sotho word..." class="search-input">
+            <button type="submit" class="search-btn">Search</button>
+        </div>
+        <div class="search-filters">
+            <label>
+                Search in:
+                {{ form.search_type }}
+            </label>
+            <label>
+                Part of speech:
+                {{ form.pos }}
+            </label>
+            <label>
+                {{ form.exact_match }}
+                Exact match
+            </label>
+        </div>
+        <div class="search-tips">
+            <small>Tip: Enter at least 1 character to search. For better results, use 3+ characters.</small>
+        </div>
+        {% if form.q.errors %}
+        <div class="error-message">{{ form.q.errors|striptags }}</div>
+        {% endif %}
+    </form>
+
+    {% if searched %}
+    <div class="search-results">
+        <h3>Results for "{{ query }}"</h3>
+        {% if results %}
+            <p class="result-count">{{ results|length }} result(s) found</p>
+            <ul class="word-list">
+                {% for word in results %}
+                <li class="word-item">
+                    <div class="word-header">
+                        <span class="word-zulu">{{ word.zulu_word }}</span>
+                        <span class="word-translations">
+                            <span class="word-english">{{ word.english_translation }}</span>
+                            {% if word.swati_translation %}
+                            <span class="word-swati">{{ word.swati_translation }}</span> 
+                            {% endif %}
+                            {% if word.sotho_translation %}
+                            <span class="word-sotho">{{ word.sotho_translation }}</span>
+                            {% endif %}
+                        </span>
+                        <div class="word-actions">
+                            <button class="tts-btn" data-text="{{ word.zulu_word }}">🔊</button>
+                            <button class="fav-btn {% if word.is_favourite %}active{% endif %}" data-word-id="{{ word.id }}">{% if word.is_favourite %}★{% else %}☆{% endif %}</button>
+                        </div>
+                    </div>
+                    <div class="word-details">
+                        <p><strong>Part of Speech:</strong> {{ word.get_part_of_speech_display }}</p>
+                        {% if word.pronunciation_guide %}
+                        <p><strong>Pronunciation:</strong> {{ word.pronunciation_guide }}</p>
+                        {% endif %}
+                        {% if word.cultural_context %}
+                        <p><strong>Cultural Context:</strong> {{ word.cultural_context }}</p>
+                        {% endif %}
+                        {% if word.example_sentence_zulu %}
+                        <div class="example-sentences">
+                            <p><strong>Example (Zulu):</strong> {{ word.example_sentence_zulu }}</p>
+                            <p><strong>Example (English):</strong> {{ word.example_sentence_english }}</p>
+                            {% if word.example_sentence_swati %}
+                            <p><strong>Example (Swati):</strong> {{ word.example_sentence_swati }}</p>
+                            {% endif %}
+                            {% if word.example_sentence_sotho %}
+                            <p><strong>Example (Sotho):</strong> {{ word.example_sentence_sotho }}</p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'word_detail' word.id %}" class="btn btn-outline">View Details</a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="no-results">
+                <p>No results found for "{{ query }}".</p>
+                {% if suggestions %}
+                <p>Did you mean:</p>
+                <ul class="suggestion-list">
+                    {% for suggestion in suggestions %}
+                    <li><a href="{% url 'search' %}?q={{ suggestion|urlencode }}">{{ suggestion }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="suggestions">
+                    <h4>Search Tips:</h4>
+                    <ul>
+                        <li>Make sure your spelling is correct</li>
+                        <li>Try using more specific terms</li>
+                        <li>Search in different languages (isiZulu, English, Swati or Sotho)</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="download-section">
+        <h4>Download the Corpus Database</h4>
+        <p>Download the complete database as a JSON file (requires login):</p>
+        <a href="{% url 'download_corpus' %}" class="download-btn">
+             Download Database (JSON)
+        </a>
+    </div>
+</div>
+{% endblock %}

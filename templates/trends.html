@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="trends-container">
+    <h2>Corpus Statistics And Trends</h2>
+    
+    <div class="stats-overview">
+        <div class="stat-card">
+            <h3>Total Words</h3>
+            <p class="stat-number">{{ total_words }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Phrases</h3>
+            <p class="stat-number">{{ total_phrases }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p class="stat-number">{{ total_users }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Searches</h3>
+            <p class="stat-number">{{ total_searches }}</p>
+        </div>
+    </div>
+    
+    <div class="trends-section">
+        <h3>Most Frequent Words</h3>
+        <div class="chart-container" style="height: 400px; position: relative;">
+            <canvas id="wordFrequencyChart"></canvas>
+        </div>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Translation</th>
+                    <th>Search Count</th>
+                    <th>Part of Speech</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for word in word_frequency %}
+                <tr>
+                    <td><a href="{% url 'word_detail' word.id %}">{{ word.zulu_word }}</a></td>
+                    <td>{{ word.english_translation }}</td>
+                    <td>{{ word.search_count }}</td>
+                    <td>{{ word.part_of_speech }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="trends-section">
+        <h3>Common Word Pairs</h3>
+        <p><small>Words that have appeared together in the same search results.</small></p>
+        {% if word_pairs %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Word 1</th>
+                    <th>Word 2</th>
+                    <th>Frequency</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pair in word_pairs %}
+                <tr>
+                    <td><a href="{% url 'word_detail' pair.word1.id %}">{{ pair.word1.zulu_word }}</a></td>
+                    <td><a href="{% url 'word_detail' pair.word2.id %}">{{ pair.word2.zulu_word }}</a></td>
+                    <td>{{ pair.frequency }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No word pairs recorded yet &mdash; search for a term that matches more than one word to build this table.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Load Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}

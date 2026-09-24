@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="history-container">
+    <div class="history-header">
+        <h2>Your Search History</h2>
+        <p><small>Your {{ history|length }} most recent distinct searches. Searching the same term again moves it to the top instead of adding a duplicate.</small></p>
+        
+        {% if history %}
+        <div class="history-actions-top">
+            <form method="POST" action="{% url 'clear_all_history' %}" class="clear-all-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" 
+                        onclick="return confirm('Are you sure you want to clear ALL your search history?')">
+                      Clear All History
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if history %}
+    <div class="history-list">
+        {% for entry in history %}
+        <div class="history-item">
+            <div class="history-header">
+                <h3>"{{ entry.search_query }}"</h3>
+                <div class="history-controls">
+                    <span class="history-date">{{ entry.search_date|date:"M d, Y H:i" }}</span>
+                    <form method="POST" action="{% url 'remove_history_entry' entry.id %}" class="remove-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-remove" title="Remove this entry">
+                            Remove
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            {% if entry.search_results.all %}
+            <div class="history-results">
+                <p>Found {{ entry.search_results.all|length }} result(s):</p>
+                <ul>
+                    {% for result in entry.search_results.all|slice:":3" %}
+                    <li>
+                        <a href="{% url 'word_detail' result.id %}">
+                            {{ result.zulu_word }} - {{ result.english_translation }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if entry.search_results.all|length > 3 %}
+                    <li>... and {{ entry.search_results.all|length|add:"-3" }} more</li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% else %}
+            <p class="no-results">No results found for this search.</p>
+            {% endif %}
+            
+            <div class="history-actions">
+                <a href="{% url 'search' %}?q={{ entry.search_query|urlencode }}" class="btn btn-outline">
+                     Search Again
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>Your search history is empty.</p>
+        <p>Start exploring the <a href="{% url 'search' %}">corpus</a> to build your history!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

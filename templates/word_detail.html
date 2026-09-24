@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="word-detail-container">
+    <div class="word-header">
+        <h2>{{ word.zulu_word }}</h2>
+        <div class="word-actions">
+            <button class="tts-btn" data-text="{{ word.zulu_word }}">🔊</button>
+            <button class="fav-btn {% if word.is_favourite %}active{% endif %}" data-word-id="{{ word.id }}">☆</button>
+        </div>
+    </div>
+    <div class="word-details">
+        <p class="english-translation">{{ word.english_translation }}</p>
+        
+        <div class="detail-section">
+            <h3>Details</h3>
+            <p><strong>Part of Speech:</strong> {{ word.part_of_speech }}</p>
+            {% if word.pronunciation_guide %}
+            <p><strong>Pronunciation:</strong> {{ word.pronunciation_guide }}</p>
+            {% endif %}
+        </div>
+        
+        {% if word.cultural_context %}
+        <div class="detail-section">
+            <h3>Cultural Context</h3>
+            <p>{{ word.cultural_context }}</p>
+        </div>
+        {% endif %}
+        
+        {% if word.example_sentence_zulu %}
+        <div class="detail-section">
+            <h3>Example Usage (Zulu)</h3>
+            <p class="zulu-example">{{ word.example_sentence_zulu }}</p>
+        </div>
+        {% endif %}
+
+        {% if word.example_sentence_swati %}
+        <div class="detail-section">
+        <h3>Example Usage (Swati)</h3>
+        <p class="swati-example">{{ word.example_sentence_swati }}</p>
+        </div>
+        {% endif %}
+
+        {% if word.example_sentence_sotho %}
+        <div class="detail-section">
+        <h3>Example Usage (Sotho)</h3>
+        <p class="sotho-example">{{ word.example_sentence_sotho }}</p>
+        </div>
+        {% endif %}
+
+        <div class="detail-section">
+            <h3>Word Usage</h3>
+            {% if usage_examples %}
+            <p>Appears in {{ usage_count }} example sentence(s) in the corpus, including:</p>
+            <ul>
+                {% for other in usage_examples %}
+                <li><a href="{% url 'word_detail' other.id %}">{{ other.zulu_word }}</a> &mdash; {{ other.example_sentence_zulu }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No usage examples available for this word.</p>
+            {% endif %}
+        </div>
+
+        <div class="detail-section">
+            <h3>Phrases</h3>
+            {% if phrases %}
+            <ul>
+                {% for phrase in phrases %}
+                <li><a href="{% url 'word_detail' phrase.id %}">{{ phrase.zulu_word }}</a> &mdash; {{ phrase.english_translation }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No common phrases found for this word.</p>
+            {% endif %}
+        </div>
+
+        <div class="detail-section">
+            <h3>Synonyms</h3>
+            {% if synonyms %}
+            <ul>
+                {% for synonym in synonyms %}
+                <li><a href="{% url 'word_detail' synonym.id %}">{{ synonym.zulu_word }}</a> &mdash; {{ synonym.english_translation }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No synonyms available.</p>
+            {% endif %}
+        </div>
+
+        {% if similar_words %}
+        <div class="detail-section">
+            <h3>Other {{ word.get_part_of_speech_display }}s</h3>
+            <ul>
+                {% for other in similar_words %}
+                <li><a href="{% url 'word_detail' other.id %}">{{ other.zulu_word }}</a> &mdash; {{ other.english_translation }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

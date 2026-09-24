@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="help-container">
+    <h2>Help & User Guide</h2>
+    
+    <div class="help-section">
+        <h3>Getting Started</h3>
+        <p>Welcome to the IsiZulu Cultural Corpus! This software helps you explore isiZulu words and phrases with English translations, cultural context, and more.</p>
+    </div>
+    
+    <div class="help-section">
+        <h3>How to Search</h3>
+        <p>Go to the Search page to find isiZulu, English, Swati or Sotho words and phrases:</p>
+        <ul>
+            <li>Search by word or phrase &mdash; short queries (under 3 characters) match the whole word, longer queries also match part of a word</li>
+            <li><strong>Search in</strong> narrows the fields searched: words &amp; translations, phrases &amp; example sentences, or cultural context</li>
+            <li><strong>Part of speech</strong> filters results to nouns, verbs, greetings, proverbs, and so on</li>
+            <li><strong>Exact match</strong> only returns words that match your query exactly</li>
+            <li>If nothing matches, you'll see a short list of similarly-spelled suggestions to choose from</li>
+        </ul>
+    </div>
+    
+    <div class="help-section">
+        <h3>Text-to-Speech Feature</h3>
+        <p>Click the 🔊 icon next to any isiZulu word to hear its pronunciation. For best results:</p>
+        <ul>
+            <li>Use a modern browser that supports speech synthesis</li>
+            <li>Ensure your volume is turned on</li>
+            <li>isiZulu voice may not be available in all browsers</li>
+            <li>Please note that the pronounciation may not always be accurate</li>
+        </ul>
+    </div>
+    
+    <div class="help-section">
+        <h3>Saving Favourites</h3>
+        <p>Click the ☆ icon next to any word to add it to your favourites. You can:</p>
+        <ul>
+            <li>Access your favourite words from the Favourites page</li>
+            <li>Remove words by clicking the star again</li>
+            <li>Use favourites to build your personal vocabulary list</li>
+        </ul>
+    </div>
+    
+    <div class="help-section">
+        <h3>Viewing Trends</h3>
+        <p>The Trends page shows statistics about the corpus:</p>
+        <ul>
+            <li>Most frequently searched words</li>
+            <li>Common word pairs</li>
+            <li>Overall corpus statistics</li>
+        </ul>
+    </div>
+    
+    <div class="help-section">
+        <h3>Search History</h3>
+        <p>The History page keeps your 5 most recent distinct searches, newest first. Searching the same term again moves it to the top rather than adding a duplicate. You can remove a single entry or clear your whole history; history is private to your account.</p>
+    </div>
+
+    <div class="help-section">
+        <h3>Downloading the Corpus</h3>
+        <p>The Search page has a "Download Database" button that generates a JSON file of the whole corpus. You need to be logged in to download it.</p>
+    </div>
+
+    <div class="help-section">
+        <h3>Need More Help?</h3>
+        <p>If you have questions or encounter issues:</p>
+        <ul>
+            <li>Check back here for updated guidance</li>
+            <li>Contact the system administrators</li>
+            <li>Consult isiZulu language resources for additional learning</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

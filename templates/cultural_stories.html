@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="search-container">
+    <div class="download-section">
+        <h4>Download The Cultural Stories Document</h4>
+        <p>Click the link below to download the document:</p>
+        <a href="{% static 'data/CULTURAL INFORMATION.docx' %}" download  class="download-btn">
+            Download Cultural Stories (DOCX)
+        </a>
+    </div>
+</div>
+{% endblock %}

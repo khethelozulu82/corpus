@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Your Profile</h2>
+    
+    <div class="profile-section">
+        <h3>Account Information</h3>
+        <div class="profile-details">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {% if user.email %}{{ user.email }}{% else %}Not provided{% endif %}</p>
+            <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+        </div>
+    </div>
+    
+    <div class="profile-section">
+        <h3>Your Activity</h3>
+        <div class="activity-stats">
+            <div class="stat">
+                <span class="stat-number">{{ favourite_count }}</span>
+                <span class="stat-label">Favourite Words</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">{{ search_count }}</span>
+                <span class="stat-label">Searches</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="profile-section">
+        <h3>Recent Activity</h3>
+            {% if recent_searches %}
+            <ul class="recent-activity">
+                {% for search in recent_searches %}
+                <li>
+                    <span class="activity-type">Searched for</span>
+                    <span class="activity-detail">"{{ search.search_query }}"</span>
+                    <span class="activity-time">{{ search.search_date|timesince }} ago</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No recent activity to display.</p>
+            {% endif %}
+    </div>
+    
+    <div class="profile-actions">
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+    </div>
+</div>
+{% endblock %}
