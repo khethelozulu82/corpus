@@ -1,84 +1,119 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="trends-container">
-    <h2>Corpus Statistics And Trends</h2>
-    
-    <div class="stats-overview">
-        <div class="stat-card">
-            <h3>Total Words</h3>
-            <p class="stat-number">{{ total_words }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Phrases</h3>
-            <p class="stat-number">{{ total_phrases }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Users</h3>
-            <p class="stat-number">{{ total_users }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Searches</h3>
-            <p class="stat-number">{{ total_searches }}</p>
-        </div>
-    </div>
-    
-    <div class="trends-section">
-        <h3>Most Frequent Words</h3>
-        <div class="chart-container" style="height: 400px; position: relative;">
-            <canvas id="wordFrequencyChart"></canvas>
-        </div>
-        
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Word</th>
-                    <th>Translation</th>
-                    <th>Search Count</th>
-                    <th>Part of Speech</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for word in word_frequency %}
-                <tr>
-                    <td><a href="{% url 'word_detail' word.id %}">{{ word.zulu_word }}</a></td>
-                    <td>{{ word.english_translation }}</td>
-                    <td>{{ word.search_count }}</td>
-                    <td>{{ word.part_of_speech }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+{% block title %}Trends · IsiZulu Cultural Corpus{% endblock %}
+{% block breadcrumb %}Trends{% endblock %}
 
-    <div class="trends-section">
-        <h3>Common Word Pairs</h3>
-        <p><small>Words that have appeared together in the same search results.</small></p>
-        {% if word_pairs %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Word 1</th>
-                    <th>Word 2</th>
-                    <th>Frequency</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pair in word_pairs %}
-                <tr>
-                    <td><a href="{% url 'word_detail' pair.word1.id %}">{{ pair.word1.zulu_word }}</a></td>
-                    <td><a href="{% url 'word_detail' pair.word2.id %}">{{ pair.word2.zulu_word }}</a></td>
-                    <td>{{ pair.frequency }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="empty-state">No word pairs recorded yet &mdash; search for a term that matches more than one word to build this table.</p>
-        {% endif %}
+{% block content %}
+<p class="eyebrow">A LOOK AT THE CORPUS</p>
+<h2 class="page-title">Corpus Statistics And Trends</h2>
+<p class="page-sub">Explore overall corpus statistics, frequently searched words and common word pairs.</p>
+
+<div class="stats-overview">
+    <div class="stat-card">
+        <header><span>Total Words</span>{% include 'partials/icon.html' with name='book' %}</header>
+        <p class="stat-number">{{ total_words }}</p>
+    </div>
+    <div class="stat-card">
+        <header><span>Total Phrases</span>{% include 'partials/icon.html' with name='book' %}</header>
+        <p class="stat-number">{{ total_phrases }}</p>
+    </div>
+    <div class="stat-card">
+        <header><span>Total Users</span>{% include 'partials/icon.html' with name='user' %}</header>
+        <p class="stat-number">{{ total_users }}</p>
+    </div>
+    <div class="stat-card">
+        <header><span>Total Searches</span>{% include 'partials/icon.html' with name='search' %}</header>
+        <p class="stat-number">{{ total_searches }}</p>
     </div>
 </div>
 
-<!-- Load Chart.js from CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <h3 class="panel-title">Most Frequent Words</h3>
+            <p class="panel-sub">Search counts for the most frequent entries in the table below.</p>
+        </div>
+        <span class="badge-soft">Search Frequency</span>
+    </div>
+
+    {% if word_frequency %}
+    <ul class="bar-list">
+        {% for word in word_frequency %}
+        <li class="bar-row">
+            <span class="bar-label"><a href="{% url 'word_detail' word.id %}">{{ word.zulu_word }}</a></span>
+            <div class="bar-track">
+                <div class="bar-fill" style="width: {% widthratio word.search_count 10 100 %}%"></div>
+            </div>
+            <span class="bar-value">{{ word.search_count }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">No search data yet.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <h3 class="panel-title">Word Statistics</h3>
+        </div>
+        <span class="badge-soft">{{ word_frequency|length }} displayed entries</span>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Word · IsiZulu</th>
+                <th>Translation · English</th>
+                <th>Search Count</th>
+                <th>Part of Speech</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for word in word_frequency %}
+            <tr>
+                <td><a href="{% url 'word_detail' word.id %}">{{ word.zulu_word }}</a></td>
+                <td>{{ word.english_translation }}</td>
+                <td>{{ word.search_count }}</td>
+                <td>{{ word.get_part_of_speech_display }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="muted">No data available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <h3 class="panel-title">Common Word Pairs</h3>
+            <p class="panel-sub">Words that have appeared together in the same search results.</p>
+        </div>
+    </div>
+
+    {% if word_pairs %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Word 1</th>
+                <th>Word 2</th>
+                <th>Frequency</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pair in word_pairs %}
+            <tr>
+                <td><a href="{% url 'word_detail' pair.word1.id %}">{{ pair.word1.zulu_word }}</a></td>
+                <td><a href="{% url 'word_detail' pair.word2.id %}">{{ pair.word2.zulu_word }}</a></td>
+                <td>{{ pair.frequency }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="muted">No word pairs recorded yet — search for a term that matches more than one word to build this table.</p>
+    {% endif %}
+</section>
 {% endblock %}

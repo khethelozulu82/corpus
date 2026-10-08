@@ -1,79 +1,59 @@
 {% extends 'base.html' %}
 
-{% load static %}
+{% block title %}Favourites · IsiZulu Cultural Corpus{% endblock %}
+{% block breadcrumb %}Favourites{% endblock %}
 
 {% block content %}
-<div class="favourites-container">
-    <h2>Your Favourite Words</h2>
+<p class="eyebrow">YOUR SAVED WORDS</p>
+<h2 class="page-title">Favourites</h2>
+<p class="page-sub">Words you've saved for later. Tap the star to remove them.</p>
 
-    <form action="{% url 'favourites' %}" method="get" class="search-form">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search your favourites..." class="search-input">
-        <button type="submit" class="search-btn">Search</button>
-    </form>
-    {% if form.q.errors %}
-    <div class="error-message">{{ form.q.errors|striptags }}</div>
-    {% endif %}
+<form action="{% url 'favourites' %}" method="get" class="search-bar search-bar-simple">
+    <span class="search-bar-icon">{% include 'partials/icon.html' with name='search' %}</span>
+    <input type="text" name="q" value="{{ query }}" placeholder="Search your favourites…">
+    <button type="submit" class="btn btn-green">{% include 'partials/icon.html' with name='search' %} Search</button>
+</form>
 
-    {% if favourites %}
-    <div class="favourites-info">
-        <p>You have <strong>{{ favourites|length }}</strong> favourite word(s)</p>
-    </div>
-    
-    <ul class="word-list">
-        {% for favourite in favourites %}
-        <li class="word-item">
-            <div class="word-header">
-                <span class="word-zulu">{{ favourite.word.zulu_word }}</span>
-                <span class="word-translations">
-                    <span class="word-english">{{ favourite.word.english_translation }}</span>
-                    {% if favourite.word.swati_translation %}
-                    <span class="word-swati">{{ favourite.word.swati_translation }}</span>
-                    {% endif %}
-                    {% if favourite.word.sotho_translation %}
-                    <span class="word-swati">{{ favourite.word.sotho_translation }}</span>
-                    {% endif %}
-                </span>
-                <div class="word-actions">
-                    <button class="tts-btn" data-text="{{ favourite.word.zulu_word }}">🔊</button>
-                    <button class="fav-btn active" data-word-id="{{ favourite.word.id }}">★</button>
-                </div>
-            </div>
-            <div class="word-details">
-                <p><strong>Part of Speech:</strong> {{ favourite.word.part_of_speech }}</p>
-                {% if favourite.word.pronunciation_guide %}
-                <p><strong>Pronunciation:</strong> {{ favourite.word.pronunciation_guide }}</p>
-                {% endif %}
-                {% if favourite.word.cultural_context %}
-                <p><strong>Cultural Context:</strong> {{ favourite.word.cultural_context }}</p>
-                {% endif %}
-            </div>
-            <div class="word-footer">
-                <a href="{% url 'word_detail' favourite.word.id %}" class="btn btn-outline">View Details</a>
-                <span class="favourite-date">Added on {{ favourite.date_added|date:"M d, Y" }}</span>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-    {% elif query %}
-    <div class="empty-state">
-        <p>No favourites match "{{ query }}".</p>
-        <p><a href="{% url 'favourites' %}">Clear search</a> to see all your favourites.</p>
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-icon">☆</div>
-        <h3>No Favourites Yet</h3>
-        <p>You have not added any words to your favourites yet.</p>
-        <p>Start exploring the <a href="{% url 'search' %}">corpus</a> to find words to save!</p>
-        <div class="empty-tips">
-            <h4>Tips:</h4>
-            <ul>
-                <li>Click the star icon (☆) next to any word to add it to favourites</li>
-                <li>Favourites are saved to your account and accessible from any device</li>
-                <li>Use favourites to build your personal vocabulary list</li>
-            </ul>
-        </div>
-    </div>
-    {% endif %}
+{% if favourites %}
+<div class="results-head">
+    <h3 class="panel-title">{{ favourites|length }} favourite word{{ favourites|length|pluralize }}</h3>
 </div>
+
+<ul class="result-list">
+    {% for favourite in favourites %}
+    <li class="result-row">
+        <div class="result-cols">
+            <div class="result-col">
+                <span class="col-tag">IsiZulu</span>
+                <p class="col-value zulu">{{ favourite.word.zulu_word }}</p>
+            </div>
+            <div class="result-col">
+                <span class="col-tag col-tag-alt">English meaning</span>
+                <p class="col-value">{{ favourite.word.english_translation }}</p>
+            </div>
+        </div>
+        <div class="result-actions">
+            <button class="icon-btn tts-btn" data-text="{{ favourite.word.zulu_word }}" title="Play">
+                {% include 'partials/icon.html' with name='speaker' %}
+            </button>
+            <button class="icon-btn fav-btn active" data-word-id="{{ favourite.word.id }}" title="Remove">
+                {% include 'partials/icon.html' with name='star-filled' %}
+            </button>
+        </div>
+        <a href="{% url 'word_detail' favourite.word.id %}" class="result-link"></a>
+    </li>
+    {% endfor %}
+</ul>
+{% elif query %}
+<div class="empty-state">
+    <p>No favourites match "{{ query }}".</p>
+    <p><a href="{% url 'favourites' %}">Clear search</a> to see all your favourites.</p>
+</div>
+{% else %}
+<div class="empty-state">
+    <h3 class="panel-title">No Favourites Yet</h3>
+    <p>You haven't added any words to your favourites yet.</p>
+    <p>Start exploring the <a href="{% url 'search' %}">corpus</a> to find words to save!</p>
+</div>
+{% endif %}
 {% endblock %}

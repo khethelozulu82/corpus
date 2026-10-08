@@ -1,51 +1,93 @@
 {% extends 'base.html' %}
 
+{% block title %}Profile · IsiZulu Cultural Corpus{% endblock %}
+{% block breadcrumb %}Profile{% endblock %}
+
 {% block content %}
-<div class="profile-container">
-    <h2>Your Profile</h2>
-    
-    <div class="profile-section">
-        <h3>Account Information</h3>
-        <div class="profile-details">
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {% if user.email %}{{ user.email }}{% else %}Not provided{% endif %}</p>
-            <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
-        </div>
-    </div>
-    
-    <div class="profile-section">
-        <h3>Your Activity</h3>
-        <div class="activity-stats">
-            <div class="stat">
-                <span class="stat-number">{{ favourite_count }}</span>
-                <span class="stat-label">Favourite Words</span>
+<p class="eyebrow">YOUR PERSONAL LIBRARY</p>
+<h2 class="page-title">Your Profile</h2>
+<p class="page-sub">Your account information and recent activity, all in one place.</p>
+
+<div class="profile-layout">
+    <div class="profile-col">
+        <section class="panel">
+            <h3 class="panel-title">Account Information</h3>
+            <div class="profile-identity">
+                <span class="avatar avatar-lg">{{ user.username|first|upper }}</span>
+                <div>
+                    <p class="identity-name">{{ user.username }}</p>
+                    <p class="identity-sub">IsiZulu Cultural Corpus</p>
+                </div>
             </div>
-            <div class="stat">
-                <span class="stat-number">{{ search_count }}</span>
-                <span class="stat-label">Searches</span>
+            <dl class="meta-list">
+                <div class="meta-row">
+                    <dt>{% include 'partials/icon.html' with name='user' %} Username</dt>
+                    <dd>{{ user.username }}</dd>
+                </div>
+                <div class="meta-row">
+                    <dt>{% include 'partials/icon.html' with name='book' %} Email</dt>
+                    <dd>{% if user.email %}{{ user.email }}{% else %}Not provided{% endif %}</dd>
+                </div>
+                <div class="meta-row">
+                    <dt>{% include 'partials/icon.html' with name='clock' %} Joined</dt>
+                    <dd>{{ user.date_joined|date:"M d, Y" }}</dd>
+                </div>
+            </dl>
+        </section>
+
+        <aside class="callout callout-warn">
+            <span class="callout-icon">{% include 'partials/icon.html' with name='shield' %}</span>
+            <div class="callout-body">
+                <strong>Your history stays yours</strong>
+                <p>Search history is private to your account. You can remove entries from History at any time.</p>
+                <a href="{% url 'logout' %}" class="btn btn-light btn-sm">
+                    {% include 'partials/icon.html' with name='logout' %} Logout
+                </a>
             </div>
-        </div>
+        </aside>
     </div>
-    
-    <div class="profile-section">
-        <h3>Recent Activity</h3>
+
+    <div class="profile-col">
+        <section class="panel">
+            <h3 class="panel-title">Your Activity</h3>
+            <div class="activity-stats">
+                <div class="activity-stat">
+                    <p class="stat-number">{{ favourite_count }}</p>
+                    <span class="stat-label">Favourite Words</span>
+                    <span class="stat-icon">{% include 'partials/icon.html' with name='star' %}</span>
+                </div>
+                <div class="activity-stat">
+                    <p class="stat-number">{{ search_count }}</p>
+                    <span class="stat-label">Searches</span>
+                    <span class="stat-icon">{% include 'partials/icon.html' with name='search' %}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h3 class="panel-title">Recent Activity</h3>
+                <a href="{% url 'history' %}" class="btn btn-outline btn-sm">
+                    {% include 'partials/icon.html' with name='arrow-right' %} View History
+                </a>
+            </div>
             {% if recent_searches %}
-            <ul class="recent-activity">
+            <ul class="activity-list">
                 {% for search in recent_searches %}
                 <li>
-                    <span class="activity-type">Searched for</span>
-                    <span class="activity-detail">"{{ search.search_query }}"</span>
-                    <span class="activity-time">{{ search.search_date|timesince }} ago</span>
+                    <span class="activity-avatar">{% include 'partials/icon.html' with name='search' %}</span>
+                    <div class="activity-info">
+                        <p>Searched for “{{ search.search_query }}”</p>
+                        <span class="muted">{{ search.search_date|timesince }} ago</span>
+                    </div>
+                    <a href="{% url 'search' %}?q={{ search.search_query|urlencode }}" class="activity-link">{% include 'partials/icon.html' with name='arrow-up-right' %}</a>
                 </li>
                 {% endfor %}
             </ul>
             {% else %}
-            <p>No recent activity to display.</p>
+            <p class="muted">No recent activity to display.</p>
             {% endif %}
-    </div>
-    
-    <div class="profile-actions">
-        <a href="{% url 'logout' %}" class="btn">Logout</a>
+        </section>
     </div>
 </div>
 {% endblock %}

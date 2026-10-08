@@ -1,54 +1,133 @@
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Hub</title>
-    {% load static %}
+    <title>{% block title %}{% trans "IsiZulu Cultural Corpus" %}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>IsiZulu Cultural Corpus</h1>
-            <nav>
-                <ul>
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'search' %}">Search</a></li>
-                    <li><a href="{% url 'favourites' %}">Favourites</a></li>
-                    <li><a href="{% url 'history' %}">History</a></li>
-                    <li><a href="{% url 'trends' %}">Trends</a></li>
-                    <li><a href="{% url 'cultural_stories' %}">Cultural Stories</a></li>
-                    <li><a href="{% url 'help' %}">Help</a></li>
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'profile' %}">Profile</a></li>
-                    {% else %}
-                        <li><a href="{% url 'login' %}">Login</a></li>
-                        <li><a href="{% url 'register' %}">Register</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </header>
+<div class="app">
 
-    <main class="container">
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li class="message {{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-mark">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M20 2 L38 20 L20 38 L2 20 Z" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M20 8 L32 20 L20 32 L8 20 Z" stroke="currentColor" stroke-width="1.1"/>
+                    <path d="M20 14 L26 20 L20 26 L14 20 Z" stroke="currentColor" stroke-width="1"/>
+                </svg>
+            </div>
+            <h1 class="brand-title">{% trans "IsiZulu Cultural" %}<br>{% trans "Corpus" %}</h1>
+            <p class="brand-sub">{% trans "LANGUAGE & HERITAGE" %}</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{% url 'home' %}" class="nav-item {% if active_page == 'home' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='home' %}</span> {% trans "Home" %}
+            </a>
+            <a href="{% url 'search' %}" class="nav-item {% if active_page == 'search' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='search' %}</span> {% trans "Search" %}
+            </a>
+            <a href="{% url 'favourites' %}" class="nav-item {% if active_page == 'favourites' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='star' %}</span> {% trans "Favourites" %}
+            </a>
+            <a href="{% url 'history' %}" class="nav-item {% if active_page == 'history' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='clock' %}</span> {% trans "History" %}
+            </a>
+            <a href="{% url 'trends' %}" class="nav-item {% if active_page == 'trends' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='chart' %}</span> {% trans "Trends" %}
+            </a>
+            <a href="{% url 'cultural_stories' %}" class="nav-item {% if active_page == 'cultural_stories' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='book' %}</span> {% trans "Cultural Stories" %}
+            </a>
+            <a href="{% url 'help' %}" class="nav-item {% if active_page == 'help' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='help' %}</span> {% trans "Help" %}
+            </a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="nav-item {% if active_page == 'profile' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='user' %}</span> {% trans "Profile" %}
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="nav-item {% if active_page == 'login' %}active{% endif %}">
+                <span class="nav-icon">{% include 'partials/icon.html' with name='user' %}</span> {% trans "Login" %}
+            </a>
+            {% endif %}
+        </nav>
+
+        <div class="sidebar-decor" aria-hidden="true">
+            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {% for i in "01234" %}
+                <path d="M20 30 L40 10 L60 30 L40 50 Z" stroke="currentColor" stroke-width="0.9" opacity="0.55"/>
+                {% endfor %}
+            </svg>
+        </div>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="sidebar-user">
+            <span class="avatar">{{ user.username|first|upper }}</span>
+            <span class="user-meta">
+                <span class="user-name">{{ user.username }}</span>
+                <span class="user-role">{% trans "Your Profile" %}</span>
+            </span>
+            <span class="user-arrow">{% include 'partials/icon.html' with name='chevron' %}</span>
+        </a>
         {% endif %}
-        {% block content %}
-        {% endblock %}
-    </main>
+    </aside>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 4CPS212 Group 26 - IsiZulu Corpus</p>
-        </div>
-    </footer>
+    <div class="main-wrap">
 
-    <script src="{% static 'js/script.js' %}"></script>
+        <header class="topbar">
+            <div class="breadcrumb">
+                <span class="crumb-root">{% trans "Corpus" %}</span>
+                <span class="crumb-sep">{% include 'partials/icon.html' with name='chevron' %}</span>
+                <span class="crumb-current">{% block breadcrumb %}{% trans "Home" %}{% endblock %}</span>
+            </div>
+
+            <div class="topbar-right">
+                {% get_current_language as CURRENT_LANG %}
+                <form action="{% url 'set_language' %}" method="post" class="lang-form">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <div class="lang-switch" role="group" aria-label="{% trans 'Language' %}">
+                        <button type="submit" name="language" value="en"
+                                class="lang-option {% if CURRENT_LANG == 'en' %}active{% endif %}">
+                            <span>English</span>
+                        </button>
+                        <button type="submit" name="language" value="zu"
+                                class="lang-option {% if CURRENT_LANG == 'zu' %}active{% endif %}">
+                            <span>isiZulu</span>
+                        </button>
+                    </div>
+                </form>
+
+                <span class="avatar avatar-sm">{{ user.username|first|upper|default:"G" }}</span>
+            </div>
+        </header>
+
+        <main class="content">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="page-footer">
+            <span>{% trans "IsiZulu Cultural Corpus" %}</span>
+            <span>{% trans "isiZulu entries · English meanings" %}</span>
+        </footer>
+    </div>
+</div>
+
+<script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

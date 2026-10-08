@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
+{% load static i18n %}
 
-{% load static %}
+{% block title %}{% trans "Cultural Stories" %} · {% trans "IsiZulu Cultural Corpus" %}{% endblock %}
+{% block breadcrumb %}{% trans "Cultural Stories" %}{% endblock %}
 
 {% block content %}
-<div class="search-container">
-    <div class="download-section">
-        <h4>Download The Cultural Stories Document</h4>
-        <p>Click the link below to download the document:</p>
-        <a href="{% static 'data/CULTURAL INFORMATION.docx' %}" download  class="download-btn">
-            Download Cultural Stories (DOCX)
-        </a>
-    </div>
-</div>
+<p class="eyebrow">{% trans "STORIES BEHIND THE LANGUAGE" %}</p>
+<h2 class="page-title">{% trans "Cultural Stories" %}</h2>
+<p class="page-sub">{% trans "Traditional foods, wild fruits, ceremonies, and the life of the Zulu people in the past." %}</p>
+
+<section class="panel panel-center">
+    <span class="help-icon help-icon-lg">{% include 'partials/icon.html' with name='book' %}</span>
+    <h3 class="panel-title">{% trans "Download the Cultural Stories Document" %}</h3>
+    <p class="muted">{% trans "Includes content in isiZulu, English, Sesotho and Siswati." %}</p>
+    <a href="{% static 'data/CULTURAL INFORMATION.docx' %}" download class="btn btn-green">
+        {% include 'partials/icon.html' with name='download' %} {% trans "Download Cultural Stories (DOCX)" %}
+    </a>
+</section>
 {% endblock %}

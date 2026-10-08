@@ -1,69 +1,97 @@
 {% extends 'base.html' %}
 
+{% block title %}Home · IsiZulu Cultural Corpus{% endblock %}
+{% block breadcrumb %}Home{% endblock %}
+
 {% block content %}
-<div class="welcome">
-    <h2>Welcome to the isiZulu Cultural Corpus</h2>
-    <p>Explore isiZulu words and phrases with English & Swati translations, cultural context, and more.</p>
-</div>
+<p class="eyebrow">YOUR CULTURAL LIBRARY</p>
+<h2 class="page-title">Home</h2>
+<p class="page-sub">Welcome, {{ user.username }}. Continue exploring isiZulu language and culture.</p>
 
-<div class="search-section">
-    <form action="{% url 'search' %}" method="get" class="search-form">
-        <input type="text" name="q" placeholder="Search for isiZulu, English, or Swati words..." class="search-input">
-        <button type="submit" class="search-btn">Search</button>
-    </form>
-</div>
+<section class="hero">
+    <div class="hero-text">
+        <h3 class="hero-title">Explore language.<br>Connect with culture.</h3>
+        <p class="hero-sub">A space for isiZulu words, their English meanings, and the cultural stories that connect them.</p>
 
-<div class="recent-words">
-    <h3>Recently Added Words</h3>
-    <ul class="word-list">
-        {% for word in recent_words %}
-        <li class="word-item">
-            <div class="word-header">
-                <span class="word-zulu">{{ word.zulu_word }}</span>
-                <div>
-                    <button class="tts-btn" data-text="{{ word.zulu_word }}">🔊</button>
-                    <button class="fav-btn" data-word-id="{{ word.id }}">☆</button>
-                </div>
+        <form action="{% url 'search' %}" method="get" class="hero-search">
+            <span class="hero-search-icon">{% include 'partials/icon.html' with name='search' %}</span>
+            <input type="text" name="q" placeholder="Search an isiZulu word or English meaning" autocomplete="off">
+            <button type="submit" class="btn btn-tan">
+                Search {% include 'partials/icon.html' with name='arrow-right' %}
+            </button>
+        </form>
+    </div>
+    <div class="hero-decor" aria-hidden="true">
+        <svg viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="currentColor" stroke-width="0.9" opacity="0.5">
+                {% for i in "012345" %}<path d="M20 40 L45 15 L70 40 L45 65 Z"/><path d="M20 70 L45 45 L70 70 L45 95 Z"/><path d="M20 100 L45 75 L70 100 L45 125 Z"/><path d="M20 130 L45 105 L70 130 L45 155 Z"/>{% endfor %}
+                <g transform="translate(60,0)">{% for i in "012345" %}<path d="M20 40 L45 15 L70 40 L45 65 Z"/><path d="M20 70 L45 45 L70 70 L45 95 Z"/><path d="M20 100 L45 75 L70 100 L45 125 Z"/><path d="M20 130 L45 105 L70 130 L45 155 Z"/>{% endfor %}</g>
+                <g transform="translate(120,0)">{% for i in "012345" %}<path d="M20 40 L45 15 L70 40 L45 65 Z"/><path d="M20 70 L45 45 L70 70 L45 95 Z"/><path d="M20 100 L45 75 L70 100 L45 125 Z"/><path d="M20 130 L45 105 L70 130 L45 155 Z"/>{% endfor %}</g>
+            </g>
+        </svg>
+    </div>
+</section>
+
+<section class="quick-links">
+    <a class="quick-card" href="{% url 'favourites' %}">
+        <span class="quick-icon">{% include 'partials/icon.html' with name='star' %}</span>
+        <h4 class="quick-title">Favourites</h4>
+        <p class="quick-sub">Keep the words you want to return to.</p>
+        <span class="quick-foot">
+            <span>{{ favourite_count|default:0 }} Favourite Words</span>
+            {% include 'partials/icon.html' with name='arrow-up-right' %}
+        </span>
+    </a>
+    <a class="quick-card" href="{% url 'cultural_stories' %}">
+        <span class="quick-icon">{% include 'partials/icon.html' with name='book' %}</span>
+        <h4 class="quick-title">Cultural Stories</h4>
+        <p class="quick-sub">Explore the culture behind the language.</p>
+        <span class="quick-foot">
+            <span>Explore Cultural Stories</span>
+            {% include 'partials/icon.html' with name='arrow-up-right' %}
+        </span>
+    </a>
+    <a class="quick-card" href="{% url 'trends' %}">
+        <span class="quick-icon">{% include 'partials/icon.html' with name='chart' %}</span>
+        <h4 class="quick-title">Trends</h4>
+        <p class="quick-sub">Discover searches and corpus statistics.</p>
+        <span class="quick-foot">
+            <span>View Trends</span>
+            {% include 'partials/icon.html' with name='arrow-up-right' %}
+        </span>
+    </a>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3 class="panel-title">Your Search History</h3>
+        <a href="{% url 'history' %}" class="btn btn-outline">
+            {% include 'partials/icon.html' with name='arrow-right' %} View History
+        </a>
+    </div>
+
+    {% if recent_searches %}
+    <div class="history-grid">
+        {% for entry in recent_searches %}
+        <a class="history-chip" href="{% url 'search' %}?q={{ entry.search_query|urlencode }}">
+            <div class="chip-top">
+                <span class="chip-tag">IsiZulu</span>
+                <span class="chip-count">{{ entry.search_results.all|length }} result{{ entry.search_results.all|length|pluralize }}</span>
             </div>
-            <div class="word-translations">
-                <span class="word-english">{{ word.english_translation }}</span>
-                {% if word.swati_translation %}
-                <span class="word-swati">{{ word.swati_translation }}</span>
+            <p class="chip-query">{{ entry.search_query }}</p>
+            <div class="chip-foot">
+                {% if entry.search_results.all %}
+                    <span class="chip-translation">
+                        {% with entry.search_results.all|first as w %}{{ w.english_translation }}{% endwith %}
+                    </span>
                 {% endif %}
-                {% if word.sotho_translation %}
-                <span class="word-sotho">{{ word.sotho_translation }}</span>
-                {% endif %}
+                <span class="chip-date">{{ entry.search_date|date:"M d, Y H:i" }}</span>
             </div>
-            <div class="word-details">
-                <p><strong>Part of Speech:</strong> {{ word.part_of_speech }}</p>
-                {% if word.cultural_context %}
-                <p><strong>Cultural Context:</strong> {{ word.cultural_context }}</p>
-                {% endif %}
-            </div>
-        </li>
+        </a>
         {% endfor %}
-    </ul>
-</div>
-
-<div class="popular-words">
-    <h3>Popular Words</h3>
-    <ul class="word-list">
-        {% for word in popular_words %}
-        <li class="word-item">
-            <div class="word-header">
-                <span class="word-zulu">{{ word.zulu_word }}</span>
-                <div>
-                    <button class="tts-btn" data-text="{{ word.zulu_word }}">🔊</button>
-                    <button class="fav-btn" data-word-id="{{ word.id }}">☆</button>
-                </div>
-            </div>
-            <div class="word-translations">
-                <span class="word-english">{{ word.english_translation }}</span>
-                <span class="word-swati">{{ word.swati_translation }}</span>
-                <span class="word-sotho">{{ word.sotho_translation }}</span>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+    </div>
+    {% else %}
+    <p class="muted">No searches yet. Start exploring the corpus!</p>
+    {% endif %}
+</section>
 {% endblock %}

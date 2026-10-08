@@ -1,75 +1,88 @@
 {% extends 'base.html' %}
 
+{% block title %}History · IsiZulu Cultural Corpus{% endblock %}
+{% block breadcrumb %}History{% endblock %}
+
 {% block content %}
-<div class="history-container">
-    <div class="history-header">
-        <h2>Your Search History</h2>
-        <p><small>Your {{ history|length }} most recent distinct searches. Searching the same term again moves it to the top instead of adding a duplicate.</small></p>
-        
-        {% if history %}
-        <div class="history-actions-top">
-            <form method="POST" action="{% url 'clear_all_history' %}" class="clear-all-form">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger" 
-                        onclick="return confirm('Are you sure you want to clear ALL your search history?')">
-                      Clear All History
-                </button>
-            </form>
-        </div>
-        {% endif %}
+<div class="page-head-row">
+    <div>
+        <p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p>
+        <h2 class="page-title">Your Search History</h2>
+        <p class="page-sub">Your {{ history|length }} most recent distinct searches. Searching the same term again moves it to the top instead of adding a duplicate.</p>
     </div>
-    
     {% if history %}
-    <div class="history-list">
-        {% for entry in history %}
-        <div class="history-item">
-            <div class="history-header">
-                <h3>"{{ entry.search_query }}"</h3>
-                <div class="history-controls">
-                    <span class="history-date">{{ entry.search_date|date:"M d, Y H:i" }}</span>
-                    <form method="POST" action="{% url 'remove_history_entry' entry.id %}" class="remove-form">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-remove" title="Remove this entry">
-                            Remove
-                        </button>
-                    </form>
-                </div>
-            </div>
-            
-            {% if entry.search_results.all %}
-            <div class="history-results">
-                <p>Found {{ entry.search_results.all|length }} result(s):</p>
-                <ul>
-                    {% for result in entry.search_results.all|slice:":3" %}
-                    <li>
-                        <a href="{% url 'word_detail' result.id %}">
-                            {{ result.zulu_word }} - {{ result.english_translation }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                    
-                    {% if entry.search_results.all|length > 3 %}
-                    <li>... and {{ entry.search_results.all|length|add:"-3" }} more</li>
-                    {% endif %}
-                </ul>
-            </div>
-            {% else %}
-            <p class="no-results">No results found for this search.</p>
-            {% endif %}
-            
-            <div class="history-actions">
-                <a href="{% url 'search' %}?q={{ entry.search_query|urlencode }}" class="btn btn-outline">
-                     Search Again
-                </a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <p>Your search history is empty.</p>
-        <p>Start exploring the <a href="{% url 'search' %}">corpus</a> to build your history!</p>
-    </div>
+    <form method="POST" action="{% url 'clear_all_history' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger-outline"
+                onclick="return confirm('Are you sure you want to clear ALL your search history?');">
+            {% include 'partials/icon.html' with name='trash' %} Clear All History
+        </button>
+    </form>
     {% endif %}
 </div>
+
+{% if history %}
+<div class="history-date-row">
+    <span class="history-date-label">{{ history.0.search_date|date:"M d, Y" }}</span>
+    <span class="muted">{{ history|length }} distinct search{{ history|length|pluralize:"es" }}</span>
+</div>
+
+<div class="history-list">
+    {% for entry in history %}
+    <article class="history-card">
+        <header class="history-card-head">
+            <div class="history-card-title">
+                <span class="history-icon">{% include 'partials/icon.html' with name='search' %}</span>
+                <span class="history-query">“{{ entry.search_query }}”</span>
+                <span class="badge-soft">Found {{ entry.search_results.all|length }} result{{ entry.search_results.all|length|pluralize }}</span>
+            </div>
+            <span class="history-time">{{ entry.search_date|date:"M d, Y H:i" }}</span>
+        </header>
+
+        {% if entry.search_results.all %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>IsiZulu</th>
+                    <th>English meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in entry.search_results.all|slice:":3" %}
+                <tr>
+                    <td><a href="{% url 'word_detail' result.id %}">{{ result.zulu_word }}</a></td>
+                    <td>{{ result.english_translation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="muted">No results were found for this search.</p>
+        {% endif %}
+
+        <footer class="history-card-foot">
+            <a href="{% url 'search' %}?q={{ entry.search_query|urlencode }}" class="btn btn-green btn-sm">
+                {% include 'partials/icon.html' with name='search' %} Search Again
+            </a>
+            <form method="POST" action="{% url 'remove_history_entry' entry.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger-outline btn-sm">
+                    {% include 'partials/icon.html' with name='trash' %} Remove
+                </button>
+            </form>
+        </footer>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>Your search history is empty.</p>
+    <p>Start exploring the <a href="{% url 'search' %}">corpus</a> to build your history!</p>
+</div>
+{% endif %}
+
+<aside class="callout callout-success">
+    <span class="callout-icon">{% include 'partials/icon.html' with name='shield' %}</span>
+    <p>History is private to your account and keeps your 5 most recent distinct searches. Remove a single entry or clear your whole history.</p>
+</aside>
 {% endblock %}

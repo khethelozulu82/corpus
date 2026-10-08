@@ -2,6 +2,7 @@ import difflib
 import json
 import re
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,15 +11,47 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import translation
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .forms import FavouriteSearchForm, SearchForm
 from .models import UserFavourite, UserSearchHistory, WordPair, ZuluWord, phrase_filter
 from .utils.json_loader import export_corpus
 
-HISTORY_LIMIT = 5        # distinct searches shown on the History page
-MAX_PAIR_RESULTS = 10    # results per search that are used to update word pairs
-SUGGESTION_LIMIT = 5     # "Did you mean" suggestions shown when a search finds nothing
+HISTORY_LIMIT = 5
+HOME_HISTORY_LIMIT = 4
+MAX_PAIR_RESULTS = 10
+SUGGESTION_LIMIT = 5
+
+
+# ---------------------------------------------------------------------------
+# Shared context helpers
+# ---------------------------------------------------------------------------
+def _base_context(request, active_page):
+    ctx = {'active_page': active_page}
+    if request.user.is_authenticated:
+        ctx['favourite_count'] = UserFavourite.objects.filter(user=request.user).count()
+    else:
+        ctx['favourite_count'] = 0
+    return ctx
+
+
+# ---------------------------------------------------------------------------
+# Language switch fallback (?lang=xx&next=/search/)
+# ---------------------------------------------------------------------------
+def switch_language(request):
+    """Fallback language switcher used when the built-in set_language view
+    isn't practical (e.g. GET-based links)."""
+    lang = request.GET.get('lang', '')
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or '/'
+
+    valid_langs = {code for code, _name in settings.LANGUAGES}
+    if lang in valid_langs:
+        translation.activate(lang)
+        request.session['_language'] = lang
+
+    return redirect(next_url)
 
 
 # ---------------------------------------------------------------------------
@@ -35,11 +68,14 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, 'Registration successful!')
+            messages.success(request, _('Registration successful!'))
             return redirect('home')
     else:
         form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'registration/register.html', {
+        **_base_context(request, 'register'),
+        'form': form,
+    })
 
 
 # ---------------------------------------------------------------------------
@@ -54,10 +90,37 @@ def home(request):
     )
     _mark_favourites(request.user, recent_words + popular_words)
 
+    recent_searches = _distinct_recent_searches(request.user, HOME_HISTORY_LIMIT)
+
     return render(request, 'home.html', {
+        **_base_context(request, 'home'),
         'recent_words': recent_words,
         'popular_words': popular_words,
+        'recent_searches': recent_searches,
     })
+
+
+def _distinct_recent_searches(user, limit):
+    seen, chosen_ids = set(), []
+    rows = (
+        UserSearchHistory.objects.filter(user=user)
+        .order_by('-search_date', '-id')
+        .values_list('id', 'search_query')
+    )
+    for entry_id, search_query in rows:
+        key = search_query.strip().lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        chosen_ids.append(entry_id)
+        if len(chosen_ids) == limit:
+            break
+
+    return (
+        UserSearchHistory.objects.filter(id__in=chosen_ids)
+        .prefetch_related('search_results')
+        .order_by('-search_date', '-id')
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -91,6 +154,7 @@ def search(request):
             suggestions = _suggest_words(query)
 
     return render(request, 'search.html', {
+        **_base_context(request, 'search'),
         'form': form,
         'results': results,
         'query': query,
@@ -100,18 +164,9 @@ def search(request):
 
 
 def _build_search_conditions(query, search_type='word', exact_match=False):
-    """Build the Q object for a search.
-
-    Short queries (< 3 characters) and "exact match" use a case-insensitive
-    exact comparison; longer queries use a case-insensitive "contains".
-    ``search_type`` widens the fields searched: 'phrase' adds the example
-    sentences, 'definition' adds the cultural context.
-    """
     if not query:
         return None
-
     lookup = 'iexact' if (exact_match or len(query) < 3) else 'icontains'
-
     fields = ['zulu_word', 'english_translation', 'swati_translation', 'sotho_translation']
     if search_type == 'phrase':
         fields += [
@@ -120,7 +175,6 @@ def _build_search_conditions(query, search_type='word', exact_match=False):
         ]
     elif search_type == 'definition':
         fields += ['cultural_context']
-
     conditions = Q()
     for field in fields:
         conditions |= Q(**{f'{field}__{lookup}': query})
@@ -128,7 +182,6 @@ def _build_search_conditions(query, search_type='word', exact_match=False):
 
 
 def _suggest_words(query, limit=SUGGESTION_LIMIT):
-    """Fuzzy "Did you mean" suggestions for a search that found nothing."""
     candidates = {}
     for zulu, english in ZuluWord.objects.values_list('zulu_word', 'english_translation'):
         candidates.setdefault(zulu.lower(), zulu)
@@ -138,7 +191,6 @@ def _suggest_words(query, limit=SUGGESTION_LIMIT):
 
 
 def _save_search_history(user, query, results):
-    """Record a search (one row per search event) with its first 10 results."""
     if not results:
         return None
     entry = UserSearchHistory.objects.create(user=user, search_query=query)
@@ -147,7 +199,6 @@ def _save_search_history(user, query, results):
 
 
 def _track_word_pairs(words):
-    """Count which entries are returned together (first MAX_PAIR_RESULTS only)."""
     word_list = list(words)[:MAX_PAIR_RESULTS]
     for i in range(len(word_list)):
         for j in range(i + 1, len(word_list)):
@@ -155,7 +206,6 @@ def _track_word_pairs(words):
 
 
 def _mark_favourites(user, words):
-    """Set ``is_favourite`` on each word for the given user."""
     words = list(words)
     if not words:
         return
@@ -168,7 +218,7 @@ def _mark_favourites(user, words):
 
 
 # ---------------------------------------------------------------------------
-# Word detail (word usage, translations, phrases, synonyms)
+# Word detail
 # ---------------------------------------------------------------------------
 @login_required
 def word_detail(request, word_id):
@@ -177,11 +227,9 @@ def word_detail(request, word_id):
 
     pattern = r'\b' + re.escape(word.zulu_word) + r'\b'
 
-    # Word usage: other entries whose example sentence contains this word
     usage_qs = ZuluWord.objects.filter(example_sentence_zulu__iregex=pattern).exclude(id=word.id)
     usage_count = usage_qs.count() + (1 if re.search(pattern, word.example_sentence_zulu, re.I) else 0)
 
-    # Phrases: phrase-like entries (proverbs, idioms, ...) containing this word
     phrases = (
         ZuluWord.objects.filter(phrase_filter(), zulu_word__iregex=pattern)
         .exclude(id=word.id).order_by('zulu_word')[:10]
@@ -193,6 +241,7 @@ def word_detail(request, word_id):
     )
 
     return render(request, 'word_detail.html', {
+        **_base_context(request, 'search'),
         'word': word,
         'usage_count': usage_count,
         'usage_examples': usage_qs.order_by('zulu_word')[:5],
@@ -224,6 +273,7 @@ def favourites(request):
             )
 
     return render(request, 'favourites.html', {
+        **_base_context(request, 'favourites'),
         'favourites': favourite_list,
         'form': form,
         'query': query,
@@ -231,29 +281,28 @@ def favourites(request):
 
 
 def add_to_favourites(request, word_id):
-    """Toggle a word in the current user's favourites (AJAX, POST only)."""
     if request.method != 'POST':
         return JsonResponse(
-            {'status': 'error', 'message': 'Invalid request method. Only POST allowed.'},
+            {'status': 'error', 'message': _('Invalid request method. Only POST allowed.')},
             status=405,
         )
     if not request.user.is_authenticated:
         return JsonResponse(
-            {'status': 'error', 'message': 'Please log in to save favourites.'},
+            {'status': 'error', 'message': _('Please log in to save favourites.')},
             status=401,
         )
 
     try:
         word = ZuluWord.objects.get(id=word_id)
     except ZuluWord.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Word not found.'}, status=404)
+        return JsonResponse({'status': 'error', 'message': _('Word not found.')}, status=404)
 
     favourite, created = UserFavourite.objects.get_or_create(user=request.user, word=word)
     if created:
-        status, message = 'added', 'Added to favourites'
+        status, message = 'added', _('Added to favourites')
     else:
         favourite.delete()
-        status, message = 'removed', 'Removed from favourites'
+        status, message = 'removed', _('Removed from favourites')
 
     return JsonResponse({
         'status': status,
@@ -268,50 +317,34 @@ def add_to_favourites(request, word_id):
 # ---------------------------------------------------------------------------
 @login_required
 def history(request):
-    """Most recent distinct searches, newest first."""
-    seen, chosen_ids = set(), []
-    rows = (
-        UserSearchHistory.objects.filter(user=request.user)
-        .order_by('-search_date', '-id').values_list('id', 'search_query')
-    )
-    for entry_id, search_query in rows:
-        key = search_query.strip().lower()
-        if key in seen:
-            continue  # a repeated search only appears once (at its latest position)
-        seen.add(key)
-        chosen_ids.append(entry_id)
-        if len(chosen_ids) == HISTORY_LIMIT:
-            break
-
-    search_history = (
-        UserSearchHistory.objects.filter(id__in=chosen_ids)
-        .prefetch_related('search_results').order_by('-search_date', '-id')
-    )
-    return render(request, 'history.html', {'history': search_history})
+    search_history = _distinct_recent_searches(request.user, HISTORY_LIMIT)
+    return render(request, 'history.html', {
+        **_base_context(request, 'history'),
+        'history': search_history,
+    })
 
 
 @login_required
 @require_POST
 def remove_history_entry(request, entry_id):
-    """Remove a search from the history (all repeats of that query as well)."""
     try:
         entry = UserSearchHistory.objects.get(id=entry_id, user=request.user)
     except UserSearchHistory.DoesNotExist:
-        messages.error(request, 'History entry not found.')
+        messages.error(request, _('History entry not found.'))
         return redirect('history')
 
     UserSearchHistory.objects.filter(
         user=request.user, search_query__iexact=entry.search_query
     ).delete()
-    messages.success(request, 'Search history entry removed.')
+    messages.success(request, _('Search history entry removed.'))
     return redirect('history')
 
 
 @login_required
 @require_POST
 def clear_all_history(request):
-    count, _ = UserSearchHistory.objects.filter(user=request.user).delete()
-    messages.success(request, f'Cleared {count} history entries.')
+    count, _unused = UserSearchHistory.objects.filter(user=request.user).delete()
+    messages.success(request, _('Cleared %(count)d history entries.') % {'count': count})
     return redirect('history')
 
 
@@ -330,6 +363,7 @@ def trends(request):
     )
 
     return render(request, 'trends.html', {
+        **_base_context(request, 'trends'),
         'word_frequency': word_frequency,
         'word_pairs': word_pairs,
         'total_words': ZuluWord.objects.count(),
@@ -344,7 +378,6 @@ def trends(request):
 # ---------------------------------------------------------------------------
 @login_required
 def download_corpus_data(request):
-    """Download the whole corpus (generated from the database) as a JSON file."""
     payload = json.dumps(export_corpus(), ensure_ascii=False, indent=2)
     response = HttpResponse(payload, content_type='application/json; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="isiZulu_corpus.json"'
@@ -353,7 +386,7 @@ def download_corpus_data(request):
 
 @login_required
 def help_page(request):
-    return render(request, 'help.html')
+    return render(request, 'help.html', _base_context(request, 'help'))
 
 
 @login_required
@@ -364,6 +397,7 @@ def profile(request):
     recent_searches = UserSearchHistory.objects.filter(user=user).order_by('-search_date')[:5]
 
     return render(request, 'profile.html', {
+        **_base_context(request, 'profile'),
         'user': user,
         'favourite_count': favourite_count,
         'search_count': search_count,
@@ -373,4 +407,4 @@ def profile(request):
 
 @login_required
 def cultural_stories(request):
-    return render(request, 'cultural_stories.html')
+    return render(request, 'cultural_stories.html', _base_context(request, 'cultural_stories'))

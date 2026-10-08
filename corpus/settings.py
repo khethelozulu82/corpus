@@ -1,12 +1,5 @@
 """
 Django settings for the isiZulu Cultural Corpus (Django 5.2).
-
-Security-sensitive values can be overridden with environment variables so that
-nothing secret has to live in the repository:
-
-    DJANGO_SECRET_KEY     secret key (REQUIRED outside local development)
-    DJANGO_DEBUG          "True" (default) or "False"
-    DJANGO_ALLOWED_HOSTS  comma-separated host names, e.g. "example.com,www.example.com"
 """
 import os
 from pathlib import Path
@@ -14,8 +7,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Security ---------------------------------------------------------------
-# The fallback key is for local development only. Set DJANGO_SECRET_KEY in any
-# shared or deployed environment.
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
     'django-insecure-local-development-key-do-not-use-in-production',
@@ -37,6 +28,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,6 +49,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
             ],
         },
     },
@@ -64,7 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'corpus.wsgi.application'
 
-# --- Database (SQLite, built into Django) -----------------------------------
+# --- Database ---------------------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -81,10 +74,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # --- Internationalisation ---------------------------------------------------
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('zu', 'isiZulu'),
+]
+
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 # --- Static files -----------------------------------------------------------
 STATIC_URL = '/static/'

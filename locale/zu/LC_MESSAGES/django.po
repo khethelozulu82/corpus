@@ -1,0 +1,544 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: IsiZulu Cultural Corpus 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-01 00:00+0000\n"
+"PO-Revision-Date: 2026-01-01 00:00+0000\n"
+"Language: zu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ── Brand & navigation ─────────────────────────────────────────────────
+msgid "IsiZulu Cultural Corpus"
+msgstr "IsiZulu Cultural Corpus"
+
+msgid "IsiZulu Cultural"
+msgstr "IsiZulu Cultural"
+
+msgid "Corpus"
+msgstr "Ikhophasi"
+
+msgid "LANGUAGE & HERITAGE"
+msgstr "ULIMI NAMAGUGU"
+
+msgid "Home"
+msgstr "Ikhaya"
+
+msgid "Search"
+msgstr "Sesha"
+
+msgid "Favourites"
+msgstr "Izintandokazi"
+
+msgid "History"
+msgstr "Umlando"
+
+msgid "Trends"
+msgstr "Izitayela"
+
+msgid "Cultural Stories"
+msgstr "Izindaba Zamasiko"
+
+msgid "Help"
+msgstr "Usizo"
+
+msgid "Profile"
+msgstr "Iphrofayela"
+
+msgid "Login"
+msgstr "Ngena"
+
+msgid "Register"
+msgstr "Bhalisa"
+
+msgid "Your Profile"
+msgstr "Iphrofayela Yakho"
+
+msgid "Language"
+msgstr "Ulimi"
+
+msgid "English"
+msgstr "IsiNgisi"
+
+# ── Home page ──────────────────────────────────────────────────────────
+msgid "YOUR CULTURAL LIBRARY"
+msgstr "ILAYIBRARI YAKHO YAMASIKO"
+
+msgid "Welcome, %(name)s. Continue exploring isiZulu language and culture."
+msgstr "Siyakwamukela, %(name)s. Qhubeka uhlola ulimi lwesiZulu namasiko."
+
+msgid "Explore language."
+msgstr "Hlola ulimi."
+
+msgid "Connect with culture."
+msgstr "Xhumana namasiko."
+
+msgid "A space for isiZulu words, their English meanings, and the cultural stories that connect them."
+msgstr "Indawo yamagama esiZulu, izincazelo zawo zesiNgisi, kanye nezindaba zamasiko ezixhumanisa wona."
+
+msgid "Search an isiZulu word or English meaning"
+msgstr "Sesha igama lesiZulu noma incazelo yesiNgisi"
+
+msgid "Keep the words you want to return to."
+msgstr "Gcina amagama ofuna ukuwabuyela kuwo."
+
+msgid "Explore the culture behind the language."
+msgstr "Hlola amasiko angemuva kolimi."
+
+msgid "Explore Cultural Stories"
+msgstr "Hlola Izindaba Zamasiko"
+
+msgid "Discover searches and corpus statistics."
+msgstr "Thola izibalo zokusesha nekhophasi."
+
+msgid "View Trends"
+msgstr "Buka Izitayela"
+
+msgid "Your Search History"
+msgstr "Umlando Wakho Wokusesha"
+
+msgid "View History"
+msgstr "Buka Umlando"
+
+msgid "No searches yet. Start exploring the corpus!"
+msgstr "Akukho okuseshiwe okwamanje. Qala ukuhlola ikhophasi!"
+
+msgid "result"
+msgid_plural "results"
+msgstr[0] "umphumela"
+msgstr[1] "imiphumela"
+
+# ── Search page ────────────────────────────────────────────────────────
+msgid "EXPLORE THE CORPUS"
+msgstr "HLOLE IKHOPHASI"
+
+msgid "Find isiZulu words and expressions, with their English meanings side by side."
+msgstr "Thola amagama nezisho zesiZulu, kanye nezincazelo zazo zesiNgisi eceleni."
+
+msgid "Search for a word, phrase or meaning…"
+msgstr "Sesha igama, ibinzana noma incazelo…"
+
+msgid "Search in"
+msgstr "Sesha ku"
+
+msgid "IsiZulu"
+msgstr "IsiZulu"
+
+msgid "Both languages"
+msgstr "Zombili izilimi"
+
+msgid "Search a word or part of an expression."
+msgstr "Sesha igama noma ingxenye yesisho."
+
+msgid "Listen to a word · Save with the star"
+msgstr "Lalela igama · Gcina ngenkanyezi"
+
+msgid "English meaning"
+msgstr "Incazelo yesiNgisi"
+
+msgid "No results for"
+msgstr "Ayikho imiphumela ye"
+
+msgid "Did you mean:"
+msgstr "Ube uqonde:"
+
+msgid "Check the spelling, or try a different language."
+msgstr "Hlola isipelingi, noma uzame olunye ulimi."
+
+msgid "Hear the pronunciation"
+msgstr "Zwa ukuphimisela"
+
+msgid "Use the speaker icon next to an isiZulu word. Pronunciation may not always be accurate."
+msgstr "Sebenzisa isithonjana sesipikha eduze kwegama lesiZulu. Ukuphimisela kungase kungabi ncophelela ngaso sonke isikhathi."
+
+msgid "Download the Corpus Database"
+msgstr "Landa Isizindalwazi Sekhophasi"
+
+msgid "Download the complete database as a JSON file (requires login)."
+msgstr "Landa isizindalwazi esiphelele njengefayela le-JSON (kudinga ukungena)."
+
+msgid "Download Database"
+msgstr "Landa Isizindalwazi"
+
+# ── History page ───────────────────────────────────────────────────────
+msgid "PICK UP WHERE YOU LEFT OFF"
+msgstr "QHUBEKA LAPHO USHIYE KHONA"
+
+msgid "Your %(count)s most recent distinct searches. Searching the same term again moves it to the top instead of adding a duplicate."
+msgstr "Izinto zakho ezingu-%(count)s ezisanda kuseshwa ezihlukile. Ukusesha igama elifanayo futhi kuyisa phezulu esikhundleni sokwengeza okufanayo."
+
+msgid "Clear All History"
+msgstr "Sula Wonke Umlando"
+
+msgid "Found"
+msgstr "Kutholakale"
+
+msgid "Search Again"
+msgstr "Sesha Futhi"
+
+msgid "Remove"
+msgstr "Susa"
+
+msgid "No results were found for this search."
+msgstr "Ayikho imiphumela eyatholakala kulokhu kusesha."
+
+msgid "Your search history is empty."
+msgstr "Umlando wakho wokusesha awunalutho."
+
+msgid "Start exploring the"
+msgstr "Qala ukuhlola"
+
+msgid "corpus"
+msgstr "ikhophasi"
+
+msgid "to build your history!"
+msgstr "ukwakha umlando wakho!"
+
+msgid "History is private to your account and keeps your 5 most recent distinct searches. Remove a single entry or clear your whole history."
+msgstr "Umlando uyimfihlo ye-akhawunti yakho futhi ugcina izinto zakho ezi-5 ezisanda kuseshwa ezihlukile. Susa into eyodwa noma usule wonke umlando wakho."
+
+# ── Trends page ────────────────────────────────────────────────────────
+msgid "A LOOK AT THE CORPUS"
+msgstr "UKUBHEKA IKHOPHASI"
+
+msgid "Corpus Statistics And Trends"
+msgstr "Izibalo Nezitayela Zekhophasi"
+
+msgid "Explore overall corpus statistics, frequently searched words and common word pairs."
+msgstr "Hlola izibalo zekhophasi iyonke, amagama avame ukuseshwa kanye namagama amabili avamile."
+
+msgid "Total Words"
+msgstr "Amagama Ewonke"
+
+msgid "Total Phrases"
+msgstr "Imisho Ewonke"
+
+msgid "Total Users"
+msgstr "Abasebenzisi Abonke"
+
+msgid "Total Searches"
+msgstr "Ukusesha Okuphelele"
+
+msgid "Most Frequent Words"
+msgstr "Amagama Avame Kakhulu"
+
+msgid "Search counts for the most frequent entries in the table below."
+msgstr "Izibalo zokusesha zezinto ezivame kakhulu kuthebula elingezansi."
+
+msgid "Search Frequency"
+msgstr "Imvamisa Yokusesha"
+
+msgid "Word Statistics"
+msgstr "Izibalo Zamagama"
+
+msgid "displayed entries"
+msgstr "izinto ezibonisiwe"
+
+msgid "Word · IsiZulu"
+msgstr "Igama · IsiZulu"
+
+msgid "Translation · English"
+msgstr "Ukuhumusha · IsiNgisi"
+
+msgid "Search Count"
+msgstr "Inani Lokusesha"
+
+msgid "Part of Speech"
+msgstr "Ingxenye Yenkulumo"
+
+msgid "Common Word Pairs"
+msgstr "Amagama Amabili Avamile"
+
+msgid "Words that have appeared together in the same search results."
+msgstr "Amagama avela ndawonye emiphumeleni yokusesha efanayo."
+
+msgid "Word 1"
+msgstr "Igama 1"
+
+msgid "Word 2"
+msgstr "Igama 2"
+
+msgid "Frequency"
+msgstr "Imvamisa"
+
+msgid "No word pairs recorded yet — search for a term that matches more than one word to build this table."
+msgstr "Awekho amagama amabili aqoshiwe okwamanje — sesha igama elihambisana namagama angaphezu kwelilodwa ukwakha leli thebula."
+
+msgid "No data available."
+msgstr "Ayikho idatha etholakalayo."
+
+msgid "No search data yet."
+msgstr "Ayikho idatha yokusesha okwamanje."
+
+# ── Help page ──────────────────────────────────────────────────────────
+msgid "MAKE THE MOST OF THE CORPUS"
+msgstr "SEBENZISA IKHOPHASI NGEZONKE IZINDLELA"
+
+msgid "A simple guide to pronunciation, favourites, trends and your search history."
+msgstr "Umhlahlandlela olula wokuphimisela, izintandokazi, izitayela nomlando wakho wokusesha."
+
+msgid "Pronunciation"
+msgstr "Ukuphimisela"
+
+msgid "Click the speaker icon next to any isiZulu word to hear its pronunciation. For best results:"
+msgstr "Chofoza isithonjana sesipikha eduze kwanoma yiliphi igama lesiZulu ukuzwa ukuphimisela kwalo. Ukuze uthole imiphumela emihle:"
+
+msgid "Use a modern browser that supports speech synthesis."
+msgstr "Sebenzisa isiphequluli sesimanje esisekela ukwakhiwa kwenkulumo."
+
+msgid "Ensure your volume is turned on."
+msgstr "Qiniseka ukuthi ivolumu yakho ivuliwe."
+
+msgid "isiZulu voices may not be available in all browsers."
+msgstr "Amazwi esiZulu kungenzeka angatholakali kuzo zonke iziphequluli."
+
+msgid "Please note that the pronunciation may not always be accurate."
+msgstr "Sicela uqaphele ukuthi ukuphimisela kungase kungabi ncophelela ngaso sonke isikhathi."
+
+msgid "Saving Favourites"
+msgstr "Ukugcina Izintandokazi"
+
+msgid "Click the star icon next to any word to add it to your favourites. You can:"
+msgstr "Chofoza isithonjana senkanyezi eduze kwanoma yiliphi igama ukuze ulengeze ezintandokazini zakho. Ungakwenza:"
+
+msgid "Access your favourites from the Favourites page."
+msgstr "Finyelela izintandokazi zakho kusukela ekhasini lezintandokazi."
+
+msgid "Remove words by clicking the star again."
+msgstr "Susa amagama ngokuchofoza inkanyezi futhi."
+
+msgid "Use favourites to build your personal vocabulary list."
+msgstr "Sebenzisa izintandokazi ukwakha uhlu lwakho lwamagama."
+
+msgid "Select the star to save a word"
+msgstr "Khetha inkanyezi ukugcina igama"
+
+msgid "Viewing Trends"
+msgstr "Ukubuka Izitayela"
+
+msgid "The Trends page shows statistics about the corpus:"
+msgstr "Ikhasi lezitayela libonisa izibalo mayelana nekhophasi:"
+
+msgid "Most frequently searched words."
+msgstr "Amagama avame ukuseshwa kakhulu."
+
+msgid "Common word pairs."
+msgstr "Amagama amabili avamile."
+
+msgid "Overall corpus statistics."
+msgstr "Izibalo zekhophasi iyonke."
+
+msgid "Search History"
+msgstr "Umlando Wokusesha"
+
+msgid "The History page keeps your 5 most recent distinct searches, newest first. Searching the same term again moves it to the top rather than adding a duplicate."
+msgstr "Ikhasi lomlando ligcina izinto zakho ezi-5 ezisanda kuseshwa ezihlukile, ezintsha kuqala. Ukusesha igama elifanayo futhi kuyisa phezulu esikhundleni sokwengeza okufanayo."
+
+msgid "You can remove a single entry or clear your whole history. History is private to your account."
+msgstr "Ungasusa into eyodwa noma usule wonke umlando wakho. Umlando uyimfihlo ye-akhawathi yakho."
+
+msgid "Downloading the Corpus"
+msgstr "Ukulanda Ikhophasi"
+
+msgid "The corpus is available as a JSON file. You need to be logged in to download it."
+msgstr "Ikhophasi itholakala njengefayela le-JSON. Udinga ukungena ukuze uyilande."
+
+msgid "Download Corpus"
+msgstr "Landa Ikhophasi"
+
+# ── Profile page ───────────────────────────────────────────────────────
+msgid "YOUR PERSONAL LIBRARY"
+msgstr "ILAYIBRARI YAKHO SIBO"
+
+msgid "Your account information and recent activity, all in one place."
+msgstr "Imininingwane ye-akhawunti yakho nomsebenzi wakamuva, konke endaweni eyodwa."
+
+msgid "Account Information"
+msgstr "Imininingwane Ye-akhawunti"
+
+msgid "Username"
+msgstr "Igama lomsebenzisi"
+
+msgid "Email"
+msgstr "I-imeyili"
+
+msgid "Joined"
+msgstr "Wajoyina"
+
+msgid "Not provided"
+msgstr "Ayikunikezwanga"
+
+msgid "Your history stays yours"
+msgstr "Umlando wakho uhlala ungowakho"
+
+msgid "Search history is private to your account. You can remove entries from History at any time."
+msgstr "Umlando wokusesha uyimfihlo ye-akhawunti yakho. Ungasusa izinto kuMlando noma nini."
+
+msgid "Logout"
+msgstr "Phuma"
+
+msgid "Your Activity"
+msgstr "Umsebenzi Wakho"
+
+msgid "Favourite Words"
+msgstr "Amagama Ayizintandokazi"
+
+msgid "Searches"
+msgstr "Ukusesha"
+
+msgid "Recent Activity"
+msgstr "Umsebenzi Wakamuva"
+
+msgid "Searched for"
+msgstr "Kuseshwe"
+
+msgid "No recent activity to display."
+msgstr "Awukho umsebenzi wakamuva ozoboniswa."
+
+# ── Favourites page ────────────────────────────────────────────────────
+msgid "YOUR SAVED WORDS"
+msgstr "AMAGAMA AKHO AGCIWE"
+
+msgid "Words you've saved for later. Tap the star to remove them."
+msgstr "Amagama owagcine kamuva. Thepha inkanyezi ukuwasusa."
+
+msgid "Search your favourites…"
+msgstr "Sesha ezintandokazini zakho…"
+
+msgid "Search favourites"
+msgstr "Sesha izintandokazi"
+
+msgid "favourite word"
+msgid_plural "favourite words"
+msgstr[0] "igama eliyintandokazi"
+msgstr[1] "amagama ayizintandokazi"
+
+msgid "No favourites match"
+msgstr "Azikho izintandokazi ezihambisana ne"
+
+msgid "Clear search"
+msgstr "Sula ukusesha"
+
+msgid "to see all your favourites."
+msgstr "ukubona zonke izintandokazi zakho."
+
+msgid "No Favourites Yet"
+msgstr "Azikho Izintandokazi Okwamanje"
+
+msgid "You haven't added any words to your favourites yet."
+msgstr "Awukangeze wengeza amagama ezintandokazini zakho."
+
+msgid "Start exploring the"
+msgstr "Qala ukuhlola"
+
+msgid "to find words to save!"
+msgstr "ukuthola amagama okuwagcina!"
+
+# ── Cultural stories page ──────────────────────────────────────────────
+msgid "STORIES BEHIND THE LANGUAGE"
+msgstr "IZINDABA EZINGEMUVA KOLIMI"
+
+msgid "Traditional foods, wild fruits, ceremonies, and the life of the Zulu people in the past."
+msgstr "Ukudla kwendabuko, izithelo zasendle, imicimbi, kanye nempilo yabantu bakwaZulu emandulo."
+
+msgid "Download the Cultural Stories Document"
+msgstr "Landa Idokhumenti Yezindaba Zamasiko"
+
+msgid "Includes content in isiZulu, English, Sesotho and Siswati."
+msgstr "Kuhlanganisa okuqukethwe ngesiZulu, isiNgisi, iSesotho nesiSwati."
+
+msgid "Download Cultural Stories (DOCX)"
+msgstr "Landa Izindaba Zamasiko (DOCX)"
+
+# ── Auth pages ─────────────────────────────────────────────────────────
+msgid "Sign in to access your favourites, history and personal library."
+msgstr "Ngena ukuze ufinyelele izintandokazi zakho, umlando kanye nelayibrari yakho sibo."
+
+msgid "Your username and password didn't match. Please try again."
+msgstr "Igama lakho lomsebenzisi nephasiwedi azihambisani. Sicela uzame futhi."
+
+msgid "Password"
+msgstr "Iphasiwedi"
+
+msgid "Don't have an account?"
+msgstr "Awunayo i-akhawunti?"
+
+msgid "Register here"
+msgstr "Bhalisa lapha"
+
+msgid "Create an account to save favourites and track your searches."
+msgstr "Dala i-akhawunti ukugcina izintandokazi nokulandelela ukusesha kwakho."
+
+msgid "Please correct the errors below."
+msgstr "Sicela ulungise amaphutha angezansi."
+
+msgid "Password Confirmation"
+msgstr "Ukuqinisekiswa KwePhasiwedi"
+
+msgid "Already have an account?"
+msgstr "Usunayo i-akhawunti?"
+
+msgid "Login here"
+msgstr "Ngena lapha"
+
+# ── Word detail page ───────────────────────────────────────────────────
+msgid "Details"
+msgstr "Imininingwane"
+
+msgid "Cultural Context"
+msgstr "Umongo Wamasiko"
+
+msgid "Example Usage (isiZulu)"
+msgstr "Isibonelo Sokusetshenziswa (isiZulu)"
+
+msgid "Word Usage"
+msgstr "Ukusetshenziswa Kwegama"
+
+msgid "Phrases"
+msgstr "Imisho"
+
+msgid "Synonyms"
+msgstr "Amagama Afanayo"
+
+msgid "No usage examples available."
+msgstr "Azikho izibonelo zokusetshenziswa ezitholakalayo."
+
+msgid "No common phrases found."
+msgstr "Ayikho imisho evamile etholakele."
+
+msgid "No synonyms available."
+msgstr "Awekho amagama afanayo atholakalayo."
+
+# ── Messages ───────────────────────────────────────────────────────────
+msgid "Registration successful!"
+msgstr "Ukubhalisa kuphumelele!"
+
+msgid "History entry not found."
+msgstr "Into yomlando ayitholakalanga."
+
+msgid "Search history entry removed."
+msgstr "Into yomlando wokusesha isusiwe."
+
+msgid "Cleared %(count)d history entries."
+msgstr "Kusulwe izinto zomlando ezingu-%(count)d."
+
+msgid "Added to favourites"
+msgstr "Kungezwe ezintandokazini"
+
+msgid "Removed from favourites"
+msgstr "Kususwe ezintandokazini"
+
+msgid "Word not found."
+msgstr "Igama alitholakalanga."
+
+msgid "Invalid request method. Only POST allowed."
+msgstr "Indlela yesicelo engavumelekile. Kuphela i-POST evunyelwe."
+
+msgid "Please log in to save favourites."
+msgstr "Sicela ungene ukuze ugcine izintandokazi."
+
+# ── Footer ─────────────────────────────────────────────────────────────
+msgid "isiZulu entries · English meanings"
+msgstr "Okufakwe ngesiZulu · Izincazelo zesiNgisi"

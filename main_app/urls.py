@@ -17,4 +17,5 @@ urlpatterns = [
     path('help/', views.help_page, name='help'),
     path('profile/', views.profile, name='profile'),
     path('word/<int:word_id>/', views.word_detail, name='word_detail'),
+    path('switch-language/', views.switch_language, name='switch_language'),
 ]
